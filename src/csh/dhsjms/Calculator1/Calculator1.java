@@ -43,6 +43,8 @@ public class Calculator1 {
 		case'/':
 			result=getResult(operated, operating, new DivOperationFactory());
 			break;
+		case'%':
+			result=getResult(operated, operating, new BaiOperationFactory());
 		default:
 			result=getResult(operated, operating, new DivOperationFactory());
 			break;
@@ -78,6 +80,16 @@ abstract class Operation{
 		this.operated=operated;
 	}
 	abstract float operate();
+}
+class BaiOperation extends Operation{
+	public BaiOperation(float operated,float operating){
+		super.operation(operated,operating);
+	}
+
+	@Override
+	float operate() {
+		return (operated/operating)*100;
+	}
 }
 class AddOperation extends Operation{
 	public AddOperation(float operated,float operating) {
@@ -121,6 +133,13 @@ class DivOperation extends Operation{
 }
 abstract class OperationFactory{
 	abstract Operation getOperation(float operated,float operating);
+}
+class BaiOperationFactory extends OperationFactory{
+	@Override
+	Operation getOperation(float operated, float operating) {
+		return new BaiOperation(operated, operating);
+	}
+	
 }
 class AddOperationFactory extends OperationFactory{
 	@Override
