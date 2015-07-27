@@ -3,8 +3,10 @@ package csh.dhsjms.Calculator1;
 import java.util.Scanner;
 
 public class Calculator1 {
-	static float operated,operating,result;
-	static char operate='+';
+	private static float operated=0;
+	static float operating=0;
+	static float result=0;
+	private static char operate='+';
 	public static void main(String[] args) {
 		while(true){
 			input();
@@ -15,13 +17,13 @@ public class Calculator1 {
 	@SuppressWarnings("resource")
 	public static void input(){
 		System.out.println("请输入浮点型数字A：");
-		operated=new Scanner(System.in).nextFloat();
+		setOperated(new Scanner(System.in).nextFloat());
 		System.out.println("请输入操作符：");
 		String string=new Scanner(System.in).nextLine();
 		char[] chars=string.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
 			if (chars[i]=='+'||chars[i]=='-'||chars[i]=='*'||chars[i]=='/') {
-				operate=chars[i];
+				setOperate(chars[i]);
 				break;
 			}
 			continue;
@@ -30,23 +32,23 @@ public class Calculator1 {
 		operating=new Scanner(System.in).nextFloat();
 	}
 	public static void chooseRightFactory() {
-		switch (operate) {
+		switch (getOperate()) {
 		case '+':
-			result=getResult(operated, operating, new AddOperationFactory());
+			result=getResult(getOperated(), operating, new AddOperationFactory());
 			break;
 		case '-':
-			result=getResult(operated, operating, new SubOperationFactory());
+			result=getResult(getOperated(), operating, new SubOperationFactory());
 			break;
 		case'*':
-			result=getResult(operated, operating, new MulOperationFactory());
+			result=getResult(getOperated(), operating, new MulOperationFactory());
 			break;
 		case'/':
-			result=getResult(operated, operating, new DivOperationFactory());
+			result=getResult(getOperated(), operating, new DivOperationFactory());
 			break;
 		case'%':
-			result=getResult(operated, operating, new BaiOperationFactory());
+			result=getResult(getOperated(), operating, new BaiOperationFactory());
 		default:
-			result=getResult(operated, operating, new DivOperationFactory());
+			result=getResult(getOperated(), operating, new DivOperationFactory());
 			break;
 		}
 	}
@@ -61,13 +63,25 @@ public class Calculator1 {
 			}
 	}
 	public static void output() {
-		System.out.print(""+operated+operate+operating+"=");
+		System.out.print(""+getOperated()+getOperate()+operating+"=");
 		if (result!=Float.MAX_VALUE) {
 			System.out.println(result);
 		}
 		else {
 			System.out.println("nothing");
 		}
+	}
+	public static char getOperate() {
+		return operate;
+	}
+	public static void setOperate(char operate) {
+		Calculator1.operate = operate;
+	}
+	public static float getOperated() {
+		return operated;
+	}
+	public static void setOperated(float operated) {
+		Calculator1.operated = operated;
 	}
 }
 
