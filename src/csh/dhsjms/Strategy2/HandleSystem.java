@@ -60,10 +60,20 @@ public class HandleSystem {
 	}
 	
 	public void discount(String string) {
-		if (string=="0.8") {
+		if (string=="九折") {
+			setResult((float) (getResult()*0.9));
+		}
+		else if (string=="八折") {
 			setResult((float) (getResult()*0.8));
 		}
+		else if (string=="七折") {
+			setResult((float) (getResult()*0.7));
+		}
+		else if (string=="六折") {
+			setResult((float) (getResult()*0.6));
+		}
+		else if (string=="五折") {
+			setResult((float) (getResult()*0.5));
+		}
 	}
-
-
 }
