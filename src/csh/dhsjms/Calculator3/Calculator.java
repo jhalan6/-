@@ -1,6 +1,6 @@
 package csh.dhsjms.Calculator3;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -10,11 +10,11 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("serial")
 public class Calculator extends JFrame {
-    private BufferCalcutalor bufferCalcutalor = new BufferCalcutalor();
-    private JPanel contentPane;
     private JTextField textField;
 
     /**
@@ -38,84 +38,132 @@ public class Calculator extends JFrame {
      */
     public Calculator() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 179, 345);
-        contentPane = new JPanel();
+        setBounds(100, 100, 179 * 2, 260);
+        JPanel contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        contentPane.setLayout(null);
-
+        contentPane.setLayout(new FlowLayout());
+        setResizable(false);
         textField = new JTextField();
-        textField.setBounds(6, 6, 146, 52);
+        textField.setSize(146 * 2, 52 * 2);
         contentPane.add(textField);
-        textField.setColumns(10);
+        textField.setColumns(12);
         textField.setText(null);
+        textField.setHorizontalAlignment(JTextField.RIGHT);
+        textField.setEditable(false);
 
-        JButton btnNewButton = new JButton("+");
-        btnNewButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                bufferCalcutalor.setNext(textField.getText());
-                bufferCalcutalor.setOperate("+");
-                textField.setText(Float.toString(bufferCalcutalor.getResult()));
-                System.out.println(bufferCalcutalor.getResult());
-            }
-        });
-        btnNewButton.setBounds(6, 61, 67, 67);
-        contentPane.add(btnNewButton);
+        java.awt.Font font = new java.awt.Font("Dialog", 1, 25);
+        Map<String, JButton> buttonMap = new HashMap<String, JButton>();
 
-        JButton btnNewButton_1 = new JButton("-");
-        btnNewButton_1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                bufferCalcutalor.setNext(textField.getText());
-                bufferCalcutalor.setOperate("-");
-                textField.setText(Float.toString(bufferCalcutalor.getResult()));
-            }
-        });
-        btnNewButton_1.setBounds(85, 61, 67, 67);
-        contentPane.add(btnNewButton_1);
+        for (int i = 0; i < 10; ++i) {
+            JButton tempButton = new JButton(i + "");
+            tempButton.setFont(font);
+            buttonMap.put(i + "", tempButton);
+            final int finalI = i;
+            tempButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (finalI == 0){
+                        deailWith0();
+                    }else {
+                        setTextField(textField, (char) (finalI + '0'));
+                    }
+                }
+            });
+        }
 
-        JButton btnNewButton_2 = new JButton("*");
-        btnNewButton_2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                bufferCalcutalor.setNext(textField.getText());
-                bufferCalcutalor.setOperate("*");
-                textField.setText(Float.toString(bufferCalcutalor.getResult()));
-            }
-        });
-        btnNewButton_2.setBounds(6, 140, 67, 67);
-        contentPane.add(btnNewButton_2);
+        for (Character character : SimpleCalculator.operators) {
+            JButton tempButton = new JButton(character + "");
+            tempButton.setFont(font);
+            buttonMap.put(character + "", tempButton);
+            tempButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    setOperate(textField, character);
+                }
+            });
+        }
 
-        JButton btnNewButton_3 = new JButton("/");
-        btnNewButton_3.addActionListener(new ActionListener() {
+        JButton btnNewButton_clear = new JButton("C");
+        btnNewButton_clear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                bufferCalcutalor.setNext(textField.getText());
-                bufferCalcutalor.setOperate("/");
-                textField.setText(Float.toString(bufferCalcutalor.getResult()));
-            }
-        });
-        btnNewButton_3.setBounds(85, 140, 67, 67);
-        contentPane.add(btnNewButton_3);
-
-        JButton btnNewButton_4 = new JButton("C");
-        btnNewButton_4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                bufferCalcutalor.reset();
                 textField.setText(null);
             }
         });
-        btnNewButton_4.setBounds(6, 229, 67, 67);
-        contentPane.add(btnNewButton_4);
 
-        JButton button = new JButton("=");
-        button.addActionListener(new ActionListener() {
+        JButton button_eql = new JButton("=");
+        button_eql.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                bufferCalcutalor.setNext(textField.getText());
-                bufferCalcutalor.setOperate(null);
-                textField.setText(Float.toString(bufferCalcutalor.getResult()));
+                textField.setText(SimpleCalculator.calculate(textField.getText()));
             }
         });
-        button.setBounds(85, 229, 67, 67);
-        contentPane.add(button);
 
 
+
+        btnNewButton_clear.setFont(font);
+
+        button_eql.setFont(font);
+        textField.setFont(font);
+
+        contentPane.add(buttonMap.get("/"));
+        contentPane.add(buttonMap.get("+"));
+        contentPane.add(buttonMap.get("-"));
+        contentPane.add(buttonMap.get("*"));
+
+        contentPane.add(buttonMap.get("7"));
+        contentPane.add(buttonMap.get("8"));
+        contentPane.add(buttonMap.get("9"));
+        contentPane.add(btnNewButton_clear);
+
+        contentPane.add(buttonMap.get("4"));
+        contentPane.add(buttonMap.get("5"));
+        contentPane.add(buttonMap.get("6"));
+        contentPane.add(buttonMap.get("0"));
+
+        contentPane.add(buttonMap.get("1"));
+        contentPane.add(buttonMap.get("2"));
+        contentPane.add(buttonMap.get("3"));
+        contentPane.add(button_eql);
+
+    }
+
+    private void deailWith0() {
+        if (isBlankString()){
+            return;
+        }else if (checkLastIsOperater(textField)){
+            return;
+        }else {
+            setTextField(textField, '0');
+        }
+    }
+
+    private void setTextField(JTextField textField, char additionalString) {
+        textField.setText(textField.getText() + additionalString);
+    }
+
+    private void setOperate(JTextField textField, char operater) {
+        if (isBlankString()) {
+            return;
+        }
+        if (!checkLastIsOperater(textField)) {
+            setTextField(textField, operater);
+        } else {
+            String test = textField.getText();
+            textField.setText(test.substring(0, test.length() - 1) + operater);
+        }
+    }
+
+    private boolean isBlankString() {
+        if (textField == null || textField.getText().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkLastIsOperater(JTextField textField) {
+        String text = textField.getText();
+        if (SimpleCalculator.operators.contains(text.charAt(text.length() - 1))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

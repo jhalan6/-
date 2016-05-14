@@ -2,7 +2,7 @@ package csh.dhsjms.Calculator3;
 
 public class BufferCalcutalor {
     private float operated = 0, operating = 0, result = 0;
-    private String operate = null;
+    private Character operate = null;
     SimpleCalculator simpleCalculator = new SimpleCalculator();
 
     public void setNext(String next) {
@@ -18,7 +18,7 @@ public class BufferCalcutalor {
         }
     }
 
-    public void setOperate(String operate) {
+    public void setOperate(Character operate) {
         cal();
         this.operate = operate;
     }
