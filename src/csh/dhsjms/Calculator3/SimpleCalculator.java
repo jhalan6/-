@@ -1,12 +1,12 @@
-package csh.dhsjms.Calculator3;
+package hwt.Calculator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class SimpleCalculator {
-    private float operated, operating;
-    private Character operate = null;
     public static List<Character> operators = new ArrayList<Character>();
+    private static boolean calculated = false;
 
     static {
         operators.add('+');
@@ -15,35 +15,74 @@ public class SimpleCalculator {
         operators.add('/');
     }
 
-    private float cal() {
-        if (operate.equals('+')) {
-            return operated + operating;
-        } else if (operate.equals('-')) {
-            return operated - operating;
-        } else if (operate.equals('*')) {
-            return operated * operating;
-        } else if (operate.equals('/')) {
-            return operated / operating;
-        } else {
-            return 0;
-        }
+
+    public static boolean isCalculated() {
+        return calculated;
     }
 
-    public String getErrorMessage() {
-        return null;
-    }
-
-    public float run(float operated, char operate, float operating) {
-        this.operated = operated;
-        this.operating = operating;
-        this.operate = operate;
-        return cal();
+    public static void setCalculated(boolean calculated) {
+        SimpleCalculator.calculated = calculated;
     }
 
     public static String calculate(String text) {
-        if (text == null || text.isEmpty()){
+        calculated = true;
+        if (text == null || text.isEmpty()) {
             return 0 + "";
         }
-        return null;
+
+        Stack<Double> numStack = new Stack<>();
+        Stack<Character> operatorStack = new Stack<>();
+
+        int stringIndex = 0;
+        int nextStringStart = 0;
+
+        for (Character character : text.toCharArray()) {
+            if (operators.contains(character)) {
+                String aNum = text.substring(nextStringStart, stringIndex);
+                int a = Integer.parseInt(aNum);
+                if (operatorStack.isEmpty()) {
+                    numStack.push(((double) a));
+                } else {
+                    if (operatorStack.peek().equals('*')) {
+                        operatorStack.pop();
+                        numStack.push(numStack.pop() * a);
+                    } else if (operatorStack.peek().equals('/')) {
+                        operatorStack.pop();
+                        numStack.push(numStack.pop() / a);
+                    } else {
+                        numStack.push((double) a);
+                    }
+                }
+                nextStringStart = stringIndex + 1;
+            }
+            stringIndex++;
+        }
+
+        numStack.add(Double.parseDouble(text.substring(nextStringStart, stringIndex)));
+
+        if (operatorStack.peek().equals('*')) {
+            operatorStack.pop();
+            double a =numStack.pop();
+            numStack.push(numStack.pop() * a);
+        } else if (operatorStack.peek().equals('/')) {
+            operatorStack.pop();
+            double a =numStack.pop();
+            numStack.push(numStack.pop() / a);
+        }
+
+        Double result = (double) 0;
+        while (!operatorStack.isEmpty()) {
+            Character operator = operatorStack.pop();
+            Double a;
+            if (operator.equals('+')) {
+                result += numStack.pop();
+            } else {
+                result -= numStack.pop();
+            }
+        }
+
+        result += numStack.pop();
+
+        return String.valueOf(result);
     }
 }

@@ -1,4 +1,4 @@
-package csh.dhsjms.Calculator3;
+package hwt.Calculator;
 
 import java.awt.*;
 
@@ -62,6 +62,10 @@ public class Calculator extends JFrame {
             final int finalI = i;
             tempButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    if (SimpleCalculator.isCalculated()){
+                        textField.setText(null);
+                        SimpleCalculator.setCalculated(false);
+                    }
                     if (finalI == 0){
                         deailWith0();
                     }else {
@@ -86,6 +90,7 @@ public class Calculator extends JFrame {
         btnNewButton_clear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 textField.setText(null);
+                SimpleCalculator.setCalculated(false);
             }
         });
 
